@@ -18,6 +18,8 @@ CORS(app, resources={r"/api/*": {"origins": "http://127.0.0.1:5000/"}})
 mysql = MySQL()
 mysql.init_app(app)
 
-from app.routes import user_route
+from app.routes import user_route, administrator_route, medecin_route
 
 app.register_blueprint(user_route.user_bp, url_prefix='/api/user')
+app.register_blueprint(administrator_route.admin_bp, url_prefix='/api/admin')
+app.register_blueprint(medecin_route.medecin_bp, url_prefix='/api/medecin')

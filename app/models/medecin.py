@@ -16,7 +16,8 @@ class Medecin(User):
         conn = mysql.connect()
         cursor = conn.cursor()
         cursor.execute(
-            "CALL createMedecinForUserWithNewUser(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            "CALL createMedecinForUserWithNewUser(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+            (self.name, self.firstName, self.address, self.zipCode, self.city, self.email, self.password, self.userType, self.matricule, self.limitCustomer, self.speciality)
         )
         conn.commit()
         cursor.close()
@@ -136,6 +137,75 @@ class Medecin(User):
         conn.commit()
         cursor.close()
         conn.close()
+
+    @staticmethod
+    def getAllMedecinActif():
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT M.* FROM medecin M, user U WHERE M.user_id = U.user_id AND U.user_actif = 1"
+        )
+        medecin_data = cursor.fetchall()
+        cursor.close()
+        conn.close()
+
+        medecins = []
+        if medecin_data:
+            for medecin_data in medecin_data:
+                medecin_id = medecin_data[0]
+                user_id = medecin_data[1]
+                matricule = medecin_data[2]
+                limiteCustomer = medecin_data[3]
+                speciality = medecin_data[4]
+
+                # Ensuite, vous devez récupérer les données de l'utilisateur associé à ce médecin
+                user = User.get_by_id(user_id)
+
+                # Créez un objet Medecin en utilisant les données récupérées
+                medecin = Medecin(
+                    user.name, user.firstName, user.address, user.zipCode, user.city, user.email, user.password,
+                    user.userType, user.actif, matricule, limiteCustomer, speciality, user.user_id, medecin_id
+                )
+
+                medecins.append(medecin)
+            return medecins
+        else:
+            return None
+
+    @staticmethod
+    def getAllMedecinInactif():
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT M.* FROM medecin M, user U WHERE M.user_id = U.user_id AND U.user_actif = 0"
+        )
+        medecin_data = cursor.fetchall()
+        cursor.close()
+        conn.close()
+
+        medecins = []
+        if medecin_data:
+            for medecin_data in medecin_data:
+                medecin_id = medecin_data[0]
+                user_id = medecin_data[1]
+                matricule = medecin_data[2]
+                limiteCustomer = medecin_data[3]
+                speciality = medecin_data[4]
+
+                # Ensuite, vous devez récupérer les données de l'utilisateur associé à ce médecin
+                user = User.get_by_id(user_id)
+
+                # Créez un objet Medecin en utilisant les données récupérées
+                medecin = Medecin(
+                    user.name, user.firstName, user.address, user.zipCode, user.city, user.email, user.password,
+                    user.userType, user.actif, matricule, limiteCustomer, speciality, user.user_id, medecin_id
+                )
+
+                medecins.append(medecin)
+            return medecins
+        else:
+            return None
+
 
 
 

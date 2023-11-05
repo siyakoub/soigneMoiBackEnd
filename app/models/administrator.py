@@ -22,6 +22,31 @@ class Administrator(User):
         conn.close()
 
     @staticmethod
+    def getAdminByUserId(user_id):
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        cursor.execute(
+            "select * from admin where user_id=%s",
+            (user_id,)
+        )
+        admin_data = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        if admin_data:
+            administrator_id = admin_data[0]
+            user_id = admin_data[1]
+            administrator_role = admin_data[2]
+
+            user = User.getById(user_id)
+
+            administrateur = Administrator(user.name, user.firstName, user.address, user.zipCode, user.city, user.email,
+                              user.password, user.userType, user.actif, administrator_role, user_id,
+                              administrator_id)
+            return administrateur
+        else:
+            return None
+
+    @staticmethod
     def get_admin_by_id(admin_id):
         conn = mysql.connect()
         cursor = conn.cursor()

@@ -8,6 +8,10 @@ class MedecinService:
         return Medecin.getAllMedecin()
 
     @staticmethod
+    def get_medecin_by_user_id(user_id):
+        return Medecin.getMedecinByUserId(user_id)
+
+    @staticmethod
     def get_all_medecin_actif_service():
         return Medecin.getAllMedecinActif()
 

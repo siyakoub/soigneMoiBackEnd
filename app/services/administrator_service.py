@@ -9,6 +9,10 @@ class AdministratorService:
         admin.save()
 
     @staticmethod
+    def get_admin_by_user_id(user_id):
+        return Administrator.getAdminByUserId(user_id)
+
+    @staticmethod
     def get_admin_by_id_service(admin_id):
         return Administrator.get_admin_by_id(admin_id)
 

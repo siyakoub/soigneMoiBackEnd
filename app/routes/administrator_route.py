@@ -136,6 +136,30 @@ def get_admin_by_email_route(email):
             }
         ), 500
 
+@admin_bp.route("/admins/<int:user_id>/byUser", methods=["GET"])
+def get_admin_by_user_id_route(user_id):
+    try:
+        admin = AdministratorService.get_admin_by_user_id(user_id)
+        if admin:
+            return jsonify(
+                {
+                    "administrateur": admin.__dict__
+                }
+            ), 200
+        else:
+            return jsonify(
+                {
+                    "errorMessage": "Aucun administrateur trouvé..."
+                }
+            ), 404
+    except Exception as e:
+        return jsonify(
+            {
+                "error": str(e),
+                "errorMessage": "Une erreur est survenue lors de la récupération de l'administrateur..."
+            }
+        ), 500
+
 
 @admin_bp.route("/admins/signup", methods=["POST"])
 def create_admin_route():

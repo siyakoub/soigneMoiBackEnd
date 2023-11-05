@@ -111,6 +111,31 @@ def get_medecin_by_id_route(id_medecin):
             }
         ), 500
 
+@medecin_bp.route("/medecins/<int:user_id>/byUser", methods=["GET"])
+def get_medecin_by_user_id(user_id):
+    try:
+        medecin = MedecinService.get_medecin_by_user_id(user_id)
+        if medecin:
+            return jsonify(
+                {
+                    "medecin": medecin.__dict__
+                }
+            ), 200
+        else:
+            return jsonify(
+                {
+                    "errorMessage": "Aucun médecin trouvé..."
+                }
+            ), 404
+    except Exception as e:
+        return jsonify(
+            {
+                "error": str(e),
+                "errorMessage": "Une erreur est survenue lors de la récupération du médecin..."
+            }
+        ), 500
+
+
 @medecin_bp.route("/medecins/<string:email>", methods=["GET"])
 def get_medecin_by_email_route(email):
     try:
@@ -134,6 +159,7 @@ def get_medecin_by_email_route(email):
                 "errorMessage": "Une erreur est survenue lors de la récupération du médecin..."
             }
         ), 500
+
 
 @medecin_bp.route("/medecins/signup", methods=["POST"])
 def create_medecin_route():

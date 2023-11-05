@@ -1,4 +1,5 @@
 DELIMITER //
+drop procedure if exists createAdminForUserWithNewUser;
 CREATE PROCEDURE createAdminForUserWithNewUser(
   IN p_user_name CHAR(50),
   IN p_user_firstName CHAR(50),
@@ -30,6 +31,7 @@ END;
 DELIMITER ;
 
 DELIMITER //
+drop procedure if exists createMedecinForUserWithNewUser;
 CREATE PROCEDURE createMedecinForUserWithNewUser(
   IN p_user_name CHAR(50),
   IN p_user_firstName CHAR(50),
@@ -60,5 +62,35 @@ BEGIN
   END IF;
 END;
 //
+DELIMITER ;
+
+DELIMITER $$
+drop procedure if exists sp_createSession;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_createSession`(
+    IN p_email varchar(254),
+    IN p_token varchar(254),
+    IN p_dateHeureDebut datetime,
+    IN p_dateHeureFin datetime
+)
+BEGIN
+
+    insert into session
+    (
+        user_email,
+        token,
+        dateDebutSession,
+        dateFinSession,
+        actif
+    )
+    values
+    (
+        p_email,
+        p_token,
+        p_dateHeureDebut,
+        p_dateHeureFin,
+        1
+    );
+
+END $$
 DELIMITER ;
 

@@ -1,8 +1,12 @@
+import datetime
+from app.services.administrator_service import AdministratorService
+from app.services.medecin_service import MedecinService
 from app.services.user_service import UserService
 import time
 import urllib.parse
 from flask import Blueprint, request, jsonify
 from app.utils.hashFunction import hash_password
+from app.services.session_service import SessionService
 
 user_bp = Blueprint("user", __name__)
 
@@ -264,29 +268,130 @@ def delete_user_route(email):
         ), 500
 
 
-@user_bp.route("/users/login", methods=["POST"])
+@user_bp.route("users/login", methods=["POST"])
 def login_route():
     try:
         data = request.get_json()
         email = data["email"]
         password = data["password"]
+        userType = data["userType"]
+
         user = UserService.get_user_by_email_service(email)
-        if user and user.password == hash_password(password):
-            return jsonify(
-                {
-                    "user": user.__dict__
-                }
-            ), 200
+        if userType == "Client":
+            if user and user.motDePasse == hash_password(password):
+                SessionService.create_session_service(email, datetime.datetime.now(),
+                                                      (datetime.datetime.now() + datetime.timedelta(hours=24)))
+                sessions = SessionService.get_all_session_by_email(email)
+                if sessions:
+                    sessionActive = sessions[-1]
+                    return jsonify(
+                        {
+                            "connected": True,
+                            "utilisateur": user.__dict__,
+                            "sessions": sessionActive.__dict__
+                        }
+                    )
+            else:
+                return jsonify(
+                    {
+                        "connected": False,
+                        "erroeMessage": "L'email ou le mot de passe ne correspond à un utilisateur dans la base de données..."
+                    }
+                ), 404
+        elif userType == "Médecin":
+            if user and user.motDePasse == hash_password(password):
+                medecin = MedecinService.get_medecin_by_user_id(user.user_id)
+                SessionService.create_session_service(email, datetime.datetime.now(),
+                                                      (datetime.datetime.now() + datetime.timedelta(hours=24)))
+                sessions = SessionService.get_all_session_by_email(email)
+                if sessions and medecin:
+                    sessionActive = sessions[-1]
+                    return jsonify(
+                        {
+                            "connected": True,
+                            "utilisateur": user.__dict__,
+                            "medecin": medecin.__dict__,
+                            "sessions": sessionActive.__dict__
+                        }
+                    )
+            else:
+                return jsonify(
+                    {
+                        "connected": False,
+                        "erroeMessage": "L'email ou le mot de passe ne correspond à un utilisateur dans la base de données..."
+                    }
+                ), 404
+        elif userType == "Administrateur":
+            if user and user.motDePasse == hash_password(password):
+                administrateur = AdministratorService.get_admin_by_user_id(user.user_id)
+                SessionService.create_session_service(email, datetime.datetime.now(),
+                                                      (datetime.datetime.now() + datetime.timedelta(hours=24)))
+                sessions = SessionService.get_all_session_by_email(email)
+                if sessions and administrateur:
+                    sessionActive = sessions[-1]
+                    return jsonify(
+                        {
+                            "connected": True,
+                            "utilisateur": user.__dict__,
+                            "administrateur": administrateur.__dict__,
+                            "sessions": sessionActive.__dict__
+                        }
+                    )
+            else:
+                return jsonify(
+                    {
+                        "connected": False,
+                        "erroeMessage": "L'email ou le mot de passe ne correspond à un utilisateur dans la base de données..."
+                    }
+                ), 404
         else:
             return jsonify(
                 {
-                    "errorMessage": "L'email ou le mot de passe est incorrect..."
+                    "errorMessage": "Un problème est survenue sur le userType"
                 }
             ), 404
     except Exception as e:
         return jsonify(
             {
-                "error": str(e),
-                "errorMessage": "Une erreur est survenue lors de la tentative de connexion..."
+                "errorMessage": "Une erreur est survenue lors de la connexion  de l'utilisateur...",
+                "error": str(e)
+            }
+        ), 500
+
+
+@user_bp.route("/users/logout", methods=["DELETE"])
+def logout_route():
+    try:
+        token = request.headers.get("token")
+        session = SessionService.get_session_by_token_service(token)
+        if session:
+            user = UserService.get_user_by_email_service(session.email)
+            session.endSession(session.email, session.token, datetime.datetime.now())
+            if user:
+                return jsonify(
+                    {
+                        "deconnected": True,
+                        "session": session.__dict__,
+                        "utilisateur": user.__dict__
+                    }
+                ), 200
+            else:
+                return jsonify(
+                    {
+                        "errorMessage": "Aucune utilisateur ne possèdent cette session...",
+                        "deconnected": True
+                    }
+                ), 404
+        else:
+            return jsonify(
+                {
+                    "errorMessage": "Aucune session n'a été trouvé..."
+                }
+            ), 404
+    except Exception as e:
+        return jsonify(
+            {
+                "errorMessage": "Une erreur est survenue lors de la deconnexion de la session...",
+                "error": str(e)
             }
         ), 500

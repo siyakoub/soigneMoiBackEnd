@@ -24,6 +24,32 @@ class Medecin(User):
         conn.close()
 
     @staticmethod
+    def getMedecinByUserId(user_id):
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        cursor.execute(
+            "select * from medecin where user_id=%s",
+            (user_id,)
+        )
+        medecin_data = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        if medecin_data:
+            medecin_id = medecin_data[0]
+            user_id = medecin_data[1]
+            matricule = medecin_data[2]
+            limiteCustomer = medecin_data[3]
+            speciality = medecin_data[4]
+
+            user = User.getById(user_id)
+
+            medecin = Medecin(user.name, user.firstName, user.address, user.zipCode, user.city, user.email, user.password, user.userType, user.actif, matricule, limiteCustomer, speciality, user_id, medecin_id)
+            return medecin
+        else:
+            return None
+
+
+    @staticmethod
     def getMedecinById(id_medecin):
         conn = mysql.connect()
         cursor = conn.cursor()

@@ -3,7 +3,6 @@ from flaskext.mysql import MySQL
 from config import Config
 from flask_cors import CORS
 
-
 app = Flask(__name__)
 
 CORS(app)
@@ -18,3 +17,7 @@ CORS(app, resources={r"/api/*": {"origins": "http://127.0.0.1:5000/"}})
 
 mysql = MySQL()
 mysql.init_app(app)
+
+from app.routes import user_route
+
+app.register_blueprint(user_route.user_bp, url_prefix='/api/user')

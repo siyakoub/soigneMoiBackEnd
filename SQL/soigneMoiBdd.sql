@@ -22,6 +22,7 @@ create table medecin(
                   user_id int not null,
                   matricule int not null,
                   limiteCustomer int not null,
+                  speciality char(100) not null,
                   foreign key (user_id) references user(user_id)
               );
 

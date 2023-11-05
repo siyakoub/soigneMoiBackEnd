@@ -8,7 +8,7 @@ class Config:
     MYSQL_HOST = 'localhost'
     MYSQL_USER = 'root'
     MYSQL_PASSWORD = '1Mehdi23!'
-    MYSQL_DB = 'superBowlBdd'
+    MYSQL_DB = 'soigneMoiBdd'
     MYSQL_CURSORCLASS = 'DictCursor'  # Utilisez un curseur de type dictionnaire
 
     # Configurations supplémentaires (à personnaliser)

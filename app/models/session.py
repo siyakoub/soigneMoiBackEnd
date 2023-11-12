@@ -25,7 +25,7 @@ class Session:
         conn = mysql.connect()
         cursor = conn.cursor()
         cursor.execute(
-            "select * from session where sessionID=%s",
+            "select * from session where session_id=%s",
             (session_id,)
         )
         session_data = cursor.fetchone()
@@ -46,7 +46,7 @@ class Session:
         conn = mysql.connect()
         cursor = conn.cursor()
         cursor.execute(
-            "select * from superBowlBdd.session where email=%s",
+            "select * from session where user_email=%s",
             (email,)
         )
         sessions_data = cursor.fetchall()
@@ -97,7 +97,7 @@ class Session:
         conn = mysql.connect()
         cursor = conn.cursor()
         cursor.execute(
-            "select * from superBowlBdd.session where token=%s",
+            "select * from session where token=%s",
             (token,)
         )
         session_data = cursor.fetchone()
@@ -117,7 +117,7 @@ class Session:
         conn = mysql.connect()
         cursor = conn.cursor()
         cursor.execute(
-            "update session set email=%s, token=%s, dateHeureFin=%s, actif=0 where sessionID=%s",
+            "update session set user_email=%s, token=%s, dateFinSession=%s, actif=0 where session_id=%s",
             (email, token, dateHeureFin, self.sessionID)
         )
         conn.commit()
@@ -128,7 +128,7 @@ class Session:
         conn = mysql.connect()
         cursor = conn.cursor()
         cursor.execute(
-            "delete from session where sessionID=%s",
+            "delete from session where session_id=%s",
             (self.sessionID,)
         )
         conn.commit()

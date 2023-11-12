@@ -152,7 +152,7 @@ def create_user_route():
         zipCode = data["zipCode"]
         city = data["city"]
         email = data["email"]
-        password = data["email"]
+        password = data["password"]
         userType = data["userType"]
         password_hash = hash_password(password)
         UserService.create_user_service(name, firstName, address, zipCode, city, email, password_hash, userType)
@@ -190,7 +190,7 @@ def update_user_service(email):
         zipCode = data["zipCode"]
         city = data["city"]
         newEmail = data["email"]
-        password = data["email"]
+        password = data["password"]
         userType = data["userType"]
         password_hash = hash_password(password)
         userUpdated = UserService.update_user_service(email, name, firstName, address, zipCode, city, newEmail,
@@ -277,8 +277,12 @@ def login_route():
         userType = data["userType"]
 
         user = UserService.get_user_by_email_service(email)
-        if userType == "Client":
-            if user and user.motDePasse == hash_password(password):
+        print(userType)
+        print(user.password)
+        print(hash_password(password))
+        if user and user.password == hash_password(password):
+            print("ok")
+            if userType == "Client":
                 SessionService.create_session_service(email, datetime.datetime.now(),
                                                       (datetime.datetime.now() + datetime.timedelta(hours=24)))
                 sessions = SessionService.get_all_session_by_email(email)
@@ -291,15 +295,14 @@ def login_route():
                             "sessions": sessionActive.__dict__
                         }
                     )
-            else:
-                return jsonify(
-                    {
-                        "connected": False,
-                        "erroeMessage": "L'email ou le mot de passe ne correspond à un utilisateur dans la base de données..."
-                    }
-                ), 404
-        elif userType == "Médecin":
-            if user and user.motDePasse == hash_password(password):
+                else:
+                    return jsonify(
+                        {
+                            "connected": False,
+                            "erroeMessage": "L'email ou le mot de passe ne correspond à un utilisateur dans la base de données..."
+                        }
+                    ), 404
+            elif userType == "Médecin":
                 medecin = MedecinService.get_medecin_by_user_id(user.user_id)
                 SessionService.create_session_service(email, datetime.datetime.now(),
                                                       (datetime.datetime.now() + datetime.timedelta(hours=24)))
@@ -314,15 +317,14 @@ def login_route():
                             "sessions": sessionActive.__dict__
                         }
                     )
-            else:
-                return jsonify(
-                    {
-                        "connected": False,
-                        "erroeMessage": "L'email ou le mot de passe ne correspond à un utilisateur dans la base de données..."
-                    }
-                ), 404
-        elif userType == "Administrateur":
-            if user and user.motDePasse == hash_password(password):
+                else:
+                    return jsonify(
+                        {
+                            "connected": False,
+                            "erroeMessage": "L'email ou le mot de passe ne correspond à un utilisateur dans la base de données..."
+                        }
+                    ), 404
+            elif userType == "Administrateur":
                 administrateur = AdministratorService.get_admin_by_user_id(user.user_id)
                 SessionService.create_session_service(email, datetime.datetime.now(),
                                                       (datetime.datetime.now() + datetime.timedelta(hours=24)))
@@ -347,7 +349,7 @@ def login_route():
         else:
             return jsonify(
                 {
-                    "errorMessage": "Un problème est survenue sur le userType"
+                    "errorMessage": "Un problème est survenue avec le mot de passe"
                 }
             ), 404
     except Exception as e:

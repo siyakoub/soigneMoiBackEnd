@@ -65,6 +65,39 @@ END;
 DELIMITER ;
 
 DELIMITER $$
+
+drop procedure if exists sp_createAvis;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_createAvis`(
+    IN p_user_id int,
+    IN p_medecin_id int,
+    IN p_note int,
+    IN p_libelle varchar(500),
+    IN p_dateAvis datetime,
+    IN p_descriptionAvis text
+)
+BEGIN
+    insert into avis
+        (
+            user_id,
+            medecin_id,
+            note,
+            libelle,
+            dateAvis,
+            descriptionAvis
+        )
+        values (
+                p_user_id,
+                p_medecin_id,
+                p_note,
+                p_libelle,
+                p_dateAvis,
+                p_descriptionAvis
+               );
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
 drop procedure if exists sp_createSession;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_createSession`(
     IN p_email varchar(254),
@@ -92,5 +125,23 @@ BEGIN
     );
 
 END $$
+DELIMITER ;
+
+DELIMITER $$
+
+drop procedure if exists sp_createPrescription;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_createPrescription`(
+    IN p_user_id int,
+    IN p_medecin_id int,
+    IN p_listMedoc text,
+    IN p_dateDebut date,
+    IN p_dateFin date
+)
+begin
+
+    insert into prescription(user_id, medecin_id, listeMedicamentAvecPosologie, dateDebutTraitement, dateFinTraitement) values (p_user_id, p_medecin_id, p_listMedoc, p_dateDebut, p_dateFin);
+
+end $$
+
 DELIMITER ;
 

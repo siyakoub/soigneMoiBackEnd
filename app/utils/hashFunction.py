@@ -15,3 +15,8 @@ def hash_password(password):
 
     # Return the hashed password and salt as a tuple
     return hashed_password
+
+
+if __name__ == "__main__":
+    print(hash_password("jenaipasdemotdepasse"))
+    print(hash_password("jenaipasdemotdepasse"))

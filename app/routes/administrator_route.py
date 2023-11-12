@@ -171,7 +171,7 @@ def create_admin_route():
         zipCode = data["zipCode"]
         city = data["city"]
         email = data["email"]
-        password = data["email"]
+        password = data["password"]
         userType = data["userType"]
         admin_role = data["adminRole"]
         password_hash = hash_password(password)

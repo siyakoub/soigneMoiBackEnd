@@ -42,3 +42,65 @@ create trigger before_insert_medecin
     end $$
 delimiter ;
 
+drop TRIGGER if exists update_previous_sessions;
+drop procedure if exists UpdatePreviousSessions;
+
+DELIMITER $$
+CREATE PROCEDURE UpdatePreviousSessions(newuser_email VARCHAR(255), new_session_id INT)
+BEGIN
+    UPDATE session
+    SET actif = 0
+    WHERE user_email = newuser_email AND actif = 1 AND session_id != new_session_id;
+END;
+$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE TRIGGER update_previous_sessions
+BEFORE INSERT ON session
+FOR EACH ROW
+BEGIN
+    CALL UpdatePreviousSessions(NEW.user_email, NEW.session_id);
+END;
+$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE TRIGGER update_previous_sessions
+BEFORE INSERT ON session
+FOR EACH ROW
+BEGIN
+    DECLARE user_email_exists INT;
+
+    -- Vérifie si l'utilisateur a déjà des sessions actives
+    SELECT COUNT(*) INTO user_email_exists
+    FROM session
+    WHERE user_email = NEW.user_email AND actif = 1;
+
+    -- Si l'utilisateur a déjà des sessions actives, met actif à 0 pour les sessions précédentes
+    IF user_email_exists > 0 THEN
+        UPDATE session
+        SET actif = 0
+        WHERE user_email = NEW.user_email AND actif = 1;
+    END IF;
+END;
+$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE TRIGGER update_previous_sessions
+BEFORE INSERT ON session
+FOR EACH ROW
+BEGIN
+    -- Met actif à 0 pour les sessions précédentes de l'utilisateur
+    UPDATE session
+    SET actif = 0
+    WHERE user_email = NEW.user_email AND actif = 1;
+END;
+$$
+DELIMITER ;
+
+
+
+
+

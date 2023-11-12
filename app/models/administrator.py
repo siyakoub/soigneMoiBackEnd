@@ -26,7 +26,7 @@ class Administrator(User):
         conn = mysql.connect()
         cursor = conn.cursor()
         cursor.execute(
-            "select * from admin where user_id=%s",
+            "select * from administrateur where user_id=%s",
             (user_id,)
         )
         admin_data = cursor.fetchone()
@@ -51,7 +51,7 @@ class Administrator(User):
         conn = mysql.connect()
         cursor = conn.cursor()
         cursor.execute(
-            "SELECT * FROM administrateur WHERE admin_id = %s",
+            "SELECT * FROM administrateur WHERE administrator_id = %s",
             (admin_id,)
         )
         admin_data = cursor.fetchone()
@@ -91,7 +91,7 @@ class Administrator(User):
             administrator_role = admin_data[2]
 
             # Ensuite, vous devez récupérer les données de l'utilisateur associé à cet administrateur
-            user = User.get_by_id(user_id)
+            user = User.getById(user_id)
 
             # Créez un objet Administrator en utilisant les données récupérées
             administrator = Administrator(
@@ -122,7 +122,7 @@ class Administrator(User):
                 administrator_role = admin_data[2]
 
                 # Ensuite, vous devez récupérer les données de l'utilisateur associé à cet administrateur
-                user = User.get_by_id(user_id)
+                user = User.getById(user_id)
 
                 # Créez un objet Administrator en utilisant les données récupérées
                 administrator = Administrator(
@@ -154,7 +154,7 @@ class Administrator(User):
                 administrator_role = admin_data[2]
 
                 # Ensuite, vous devez récupérer les données de l'utilisateur associé à cet administrateur
-                user = User.get_by_id(user_id)
+                user = User.getById(user_id)
 
                 if user.actif == 1:
                     # Créez un objet Administrator en utilisant les données récupérées

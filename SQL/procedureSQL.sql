@@ -145,3 +145,22 @@ end $$
 
 DELIMITER ;
 
+DELIMITER $$
+
+drop procedure if exists sp_createSejour;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_createSejour`(
+    IN p_user_id int,
+    IN p_medecin_id int,
+    IN p_dateDebut datetime,
+    IN p_dateFin datetime,
+    IN p_motif TEXT,
+    IN p_spéciality ENUM('Chirurgie', 'Consultation', 'Urgence', 'Autopsie', 'Autre')
+)
+begin
+
+    insert into sejour(user_id, medecin_id, dateDebut, dateFin, motif, speciality) values (p_user_id, p_medecin_id, p_dateDebut, p_dateFin, p_motif, p_spéciality);
+
+end $$
+
+DELIMITER ;
+

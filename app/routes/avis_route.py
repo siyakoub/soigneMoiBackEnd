@@ -1,10 +1,7 @@
 from app.services.avis_service import AvisService
 from app.services.user_service import UserService
 from app.services.medecin_service import MedecinService
-import time
-import urllib.parse
 from flask import Blueprint, request, jsonify
-from app.utils.hashFunction import hash_password
 
 avis_bp = Blueprint("avis", __name__)
 

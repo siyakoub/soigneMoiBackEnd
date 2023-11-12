@@ -1,8 +1,5 @@
 from app.services.medecin_service import MedecinService
-import time
-import urllib.parse
 from flask import Blueprint, request, jsonify
-from app.utils.hashFunction import hash_password
 
 medecin_bp = Blueprint("medecin", __name__)
 

@@ -5,6 +5,7 @@
     <file url="file://$PROJECT_DIR$/SQL/procedureSQL.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/SQL/soigneMoiBdd.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/SQL/triggerSQL.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/app/models/entreessorties.py" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/app/models/prescription.py" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/app/models/sejour.py" dialect="MySQL" />
   </component>

@@ -164,3 +164,21 @@ end $$
 
 DELIMITER ;
 
+
+DELIMITER $$
+
+drop procedure if exists sp_createEntreesSorties;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_createEntreesSorties`(
+    IN p_user_id int,
+    IN p_sejour_id int,
+    IN p_dateEntre datetime,
+    IN p_dateSortie datetime
+)
+begin
+    insert into entreessorties (user_id, sejour_id, dateEntree, dateEntree) values (p_user_id, p_sejour_id, p_dateEntre, p_dateSortie);
+
+end $$
+
+
+DELIMITER ;
+

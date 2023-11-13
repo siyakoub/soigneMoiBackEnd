@@ -159,7 +159,7 @@ def create_prescription_route():
         ), 500
 
 
-@prescription_bp.route("/prescriptions/<int=prescription_id>/update", methods=["PUT"])
+@prescription_bp.route("/prescriptions/<int:prescription_id>/update", methods=["PUT"])
 def update_prescription_route(prescription_id):
     try:
         data = request.get_json()

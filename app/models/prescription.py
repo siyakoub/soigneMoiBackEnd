@@ -15,8 +15,8 @@ class Prescription:
         conn = mysql.connect()
         cursor = conn.cursor()
         cursor.execute(
-            "CALL sp_createPrescription(%s, %s, %s, %s, %s, %s)",
-            (self.user_id, self.medecin_id, self.listeMedicamentAndPodologie, self.dateDebutTraitement, self.dateFinTraitement, self.prescription_id)
+            "CALL sp_createPrescription(%s, %s, %s, %s, %s)",
+            (self.user_id, self.medecin_id, self.listeMedicamentAndPodologie, self.dateDebutTraitement, self.dateFinTraitement)
         )
         conn.commit()
         cursor.close()

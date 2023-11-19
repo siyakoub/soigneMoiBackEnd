@@ -277,11 +277,7 @@ def login_route():
         userType = data["userType"]
 
         user = UserService.get_user_by_email_service(email)
-        print(userType)
-        print(user.password)
-        print(hash_password(password))
         if user and user.password == hash_password(password):
-            print("ok")
             if userType == "Client":
                 SessionService.create_session_service(email, datetime.datetime.now(),
                                                       (datetime.datetime.now() + datetime.timedelta(hours=24)))
@@ -312,7 +308,6 @@ def login_route():
                     return jsonify(
                         {
                             "connected": True,
-                            "utilisateur": user.__dict__,
                             "medecin": medecin.__dict__,
                             "sessions": sessionActive.__dict__
                         }
@@ -334,7 +329,6 @@ def login_route():
                     return jsonify(
                         {
                             "connected": True,
-                            "utilisateur": user.__dict__,
                             "administrateur": administrateur.__dict__,
                             "sessions": sessionActive.__dict__
                         }
@@ -349,7 +343,8 @@ def login_route():
         else:
             return jsonify(
                 {
-                    "errorMessage": "Un problème est survenue avec le mot de passe"
+                    "connected": False,
+                    "errorMessage": "Un problème est survenue avec lors de la connexion..."
                 }
             ), 404
     except Exception as e:

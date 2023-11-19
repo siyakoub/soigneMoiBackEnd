@@ -13,7 +13,7 @@ def get_all_sejour_route():
         if sejours:
             return jsonify(
                 {
-                    "Séjours": [
+                    "Sejours": [
                         sejour.__dict__ for sejour in sejours
                     ]
                 }
@@ -40,7 +40,7 @@ def get_sejour_by_id_route(sejour_id):
         if sejour:
             return jsonify(
                 {
-                    "Séjour": sejour.__dict__
+                    "Sejour": sejour.__dict__
                 }
             ), 200
         else:
@@ -66,7 +66,7 @@ def get_all_sejour_by_user_route(user_id):
         if sejours and user:
             return jsonify(
                 {
-                    "Séjour": [
+                    "Sejour": [
                         sejour.__dict__ for sejour in sejours
                     ],
                     "Utilisateur": user.__dict__
@@ -95,7 +95,7 @@ def get_all_sejour_for_medecin_route(medecin_id):
         if sejours and medecin:
             return jsonify(
                 {
-                    "Séjours": [
+                    "Sejours": [
                         sejour.__dict__ for sejour in sejours
                     ],
                     "Médecin": medecin.__dict__
@@ -172,7 +172,7 @@ def update_sejour_route(sejour_id):
                 return jsonify(
                     {
                         "message": "Séjour mis à jour avec succès !",
-                        "Séjour": sejour.__dict__
+                        "Sejour": sejour.__dict__
                     }
                 ), 200
             else:

@@ -61,8 +61,8 @@ def get_session_by_id_route(session_id):
         ), 500
 
 
-@session_bp.route("/session/<string:email>", methods=["GET"])
-def get_all_sessions_by_userID(email):
+@session_bp.route("/sessions/<string:email>", methods=["GET"])
+def get_all_sessions_by_user(email):
     try:
         emailDecoded = urllib.parse.unquote(email, "UTF-8")
         sessions = SessionService.get_all_session_by_email(emailDecoded)
@@ -112,7 +112,7 @@ def create_session_route():
         ), 500
 
 
-@session_bp.route("/session", methods=["GET"])
+@session_bp.route("/session/bytoken", methods=["GET"])
 def get_session_by_token_route():
     try:
         token = request.headers.get("token")

@@ -13,7 +13,7 @@ def get_all_entreessorties_route():
             return jsonify(
                 {
                     "EntreesSorties": [
-                        entreesortie.__dict for entreesortie in entreessorties
+                        entreesortie.__dict__ for entreesortie in entreessorties
                     ]
                 }
             ), 200
@@ -62,7 +62,7 @@ def get_entrees_sorties_by_user_route(user_id):
         if entreessorties:
             return jsonify(
                 {
-                    "EntréesSorties": [
+                    "EntreesSorties": [
                         entreesortie.__dict__ for entreesortie in entreessorties
                     ]
                 }

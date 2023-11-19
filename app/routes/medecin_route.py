@@ -1,7 +1,9 @@
 from app.services.medecin_service import MedecinService
 from flask import Blueprint, request, jsonify
+from app.utils.hashFunction import hash_password
 
 medecin_bp = Blueprint("medecin", __name__)
+
 
 @medecin_bp.route("/medecins", methods=["GET"])
 def get_all_medecin_route():
@@ -168,12 +170,13 @@ def create_medecin_route():
         zipCode = data["zipCode"]
         city = data["city"]
         email = data["email"]
-        password = data["email"]
+        password = data["password"]
         userType = data["userType"]
         matricule = data["matricule"]
         limitCustomer = data["limiteClient"]
         speciality = data["speciality"]
-        MedecinService.create_medecin_service(name, firstName, address, zipCode, city, email, password, userType, matricule, limitCustomer, speciality)
+        password_hashed = hash_password(password)
+        MedecinService.create_medecin_service(name, firstName, address, zipCode, city, email, password_hashed, userType, matricule, limitCustomer, speciality)
         medecin = MedecinService.get_medecin_by_email_service(email)
         if medecin:
             return jsonify(

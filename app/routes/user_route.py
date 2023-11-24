@@ -10,7 +10,6 @@ from app.services.session_service import SessionService
 
 user_bp = Blueprint("user", __name__)
 
-
 @user_bp.route("/users", methods=["GET"])
 def get_all_users_route():
     try:
@@ -268,7 +267,32 @@ def delete_user_route(email):
         ), 500
 
 
-@user_bp.route("users/login", methods=["POST"])
+@user_bp.route("/users/getByToken", methods=["GET"])
+def getUserByToken():
+    try:
+        token = request.headers.get("token")
+        user = UserService.get_user_by_token_service(token)
+        if user:
+            return jsonify(
+                {
+                    "utilisateur": user.__dict__
+                }
+            ), 200
+        else:
+            return jsonify(
+                {
+                    "errorMessage": "Aucun utilisateur trouvé..."
+                }
+            ), 404
+    except Exception as e:
+        return jsonify(
+            {
+                "error": str(e),
+                "errorMessage": "Une erreur est survenue lors de la récupération de l'utilisateur..."
+            }
+        )
+
+@user_bp.route("/users/login", methods=["POST"])
 def login_route():
     try:
         data = request.get_json()

@@ -25,6 +25,10 @@ class UserService:
         return User.getByEmail(email)
 
     @staticmethod
+    def get_user_by_token_service(token):
+        return User.getByToken(token)
+
+    @staticmethod
     def create_user_service(name, firstName, address, zipCode, city, email, password, userType):
         user = User(name, firstName, address, zipCode, city, email, password, userType, 1)
         user.save()

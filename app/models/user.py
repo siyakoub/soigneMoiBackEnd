@@ -114,6 +114,47 @@ class User:
             return None
 
     @staticmethod
+    def getByToken(token):
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT * FROM session WHERE token = %s",
+            (token,)
+        )
+        session_data = cursor.fetchone()
+        cursor.close()
+        conn.close()
+
+        if session_data:
+            user_email = session_data[1]
+
+            conn = mysql.connect()
+            cursor = conn.cursor()
+            cursor.execute(
+                "SELECT * FROM user WHERE user_email = %s",
+                (user_email,)
+            )
+            user_data = cursor.fetchone()
+            cursor.close()
+            conn.close()
+
+            if user_data:
+                user_id = user_data[0]
+                user_name = user_data[1]
+                user_firstName = user_data[2]
+                user_address = user_data[3]
+                user_zipCode = user_data[4]
+                user_city = user_data[5]
+                user_email = user_data[6]
+                user_password = user_data[7]
+                user_userType = user_data[8]
+                user_actif = user_data[9]
+
+                return User(user_name, user_firstName, user_address, user_zipCode, user_city, user_email, user_password,
+                            user_userType, user_actif, user_id)
+        return None
+
+    @staticmethod
     def getAllUsersInactif():
         conn = mysql.connect()
         cursor = conn.cursor()

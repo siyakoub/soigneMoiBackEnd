@@ -10,6 +10,7 @@ from app.services.session_service import SessionService
 
 user_bp = Blueprint("user", __name__)
 
+
 @user_bp.route("/users", methods=["GET"])
 def get_all_users_route():
     try:
@@ -292,29 +293,73 @@ def getUserByToken():
             }
         )
 
+
 @user_bp.route("/users/login", methods=["POST"])
 def login_route():
-    try:
-        data = request.get_json()
-        email = data["email"]
-        password = data["password"]
-        userType = data["userType"]
+    if request.method == "POST":
+        try:
+            data = request.get_json()
+            email = data["email"]
+            password = data["password"]
+            userType = data["userType"]
 
-        user = UserService.get_user_by_email_service(email)
-        if user and user.password == hash_password(password):
-            if userType == "Client":
-                SessionService.create_session_service(email, datetime.datetime.now(),
-                                                      (datetime.datetime.now() + datetime.timedelta(hours=24)))
-                sessions = SessionService.get_all_session_by_email(email)
-                if sessions:
-                    sessionActive = sessions[-1]
-                    return jsonify(
-                        {
-                            "connected": True,
-                            "utilisateur": user.__dict__,
-                            "sessions": sessionActive.__dict__
-                        }
-                    )
+            user = UserService.get_user_by_email_service(email)
+            if user and user.password == hash_password(password):
+                if userType == "Client":
+                    SessionService.create_session_service(email, datetime.datetime.now(),
+                                                          (datetime.datetime.now() + datetime.timedelta(hours=24)))
+                    sessions = SessionService.get_all_session_by_email(email)
+                    if sessions:
+                        sessionActive = sessions[-1]
+                        return jsonify(
+                            {
+                                "connected": True,
+                                "utilisateur": user.__dict__,
+                                "sessions": sessionActive.__dict__
+                            }
+                        )
+                    else:
+                        return jsonify(
+                            {
+                                "connected": False,
+                                "erroeMessage": "L'email ou le mot de passe ne correspond à un utilisateur dans la base de données..."
+                            }
+                        ), 404
+                elif userType == "Médecin":
+                    medecin = MedecinService.get_medecin_by_user_id(user.user_id)
+                    SessionService.create_session_service(email, datetime.datetime.now(),
+                                                          (datetime.datetime.now() + datetime.timedelta(hours=24)))
+                    sessions = SessionService.get_all_session_by_email(email)
+                    if sessions and medecin:
+                        sessionActive = sessions[-1]
+                        return jsonify(
+                            {
+                                "connected": True,
+                                "medecin": medecin.__dict__,
+                                "sessions": sessionActive.__dict__
+                            }
+                        )
+                    else:
+                        return jsonify(
+                            {
+                                "connected": False,
+                                "erroeMessage": "L'email ou le mot de passe ne correspond à un utilisateur dans la base de données..."
+                            }
+                        ), 404
+                elif userType == "Administrateur":
+                    administrateur = AdministratorService.get_admin_by_user_id(user.user_id)
+                    SessionService.create_session_service(email, datetime.datetime.now(),
+                                                          (datetime.datetime.now() + datetime.timedelta(hours=24)))
+                    sessions = SessionService.get_all_session_by_email(email)
+                    if sessions and administrateur:
+                        sessionActive = sessions[-1]
+                        return jsonify(
+                            {
+                                "connected": True,
+                                "administrateur": administrateur.__dict__,
+                                "sessions": sessionActive.__dict__
+                            }
+                        )
                 else:
                     return jsonify(
                         {
@@ -322,62 +367,20 @@ def login_route():
                             "erroeMessage": "L'email ou le mot de passe ne correspond à un utilisateur dans la base de données..."
                         }
                     ), 404
-            elif userType == "Médecin":
-                medecin = MedecinService.get_medecin_by_user_id(user.user_id)
-                SessionService.create_session_service(email, datetime.datetime.now(),
-                                                      (datetime.datetime.now() + datetime.timedelta(hours=24)))
-                sessions = SessionService.get_all_session_by_email(email)
-                if sessions and medecin:
-                    sessionActive = sessions[-1]
-                    return jsonify(
-                        {
-                            "connected": True,
-                            "medecin": medecin.__dict__,
-                            "sessions": sessionActive.__dict__
-                        }
-                    )
-                else:
-                    return jsonify(
-                        {
-                            "connected": False,
-                            "erroeMessage": "L'email ou le mot de passe ne correspond à un utilisateur dans la base de données..."
-                        }
-                    ), 404
-            elif userType == "Administrateur":
-                administrateur = AdministratorService.get_admin_by_user_id(user.user_id)
-                SessionService.create_session_service(email, datetime.datetime.now(),
-                                                      (datetime.datetime.now() + datetime.timedelta(hours=24)))
-                sessions = SessionService.get_all_session_by_email(email)
-                if sessions and administrateur:
-                    sessionActive = sessions[-1]
-                    return jsonify(
-                        {
-                            "connected": True,
-                            "administrateur": administrateur.__dict__,
-                            "sessions": sessionActive.__dict__
-                        }
-                    )
             else:
                 return jsonify(
                     {
                         "connected": False,
-                        "erroeMessage": "L'email ou le mot de passe ne correspond à un utilisateur dans la base de données..."
+                        "errorMessage": "Un problème est survenue avec lors de la connexion..."
                     }
                 ), 404
-        else:
+        except Exception as e:
             return jsonify(
                 {
-                    "connected": False,
-                    "errorMessage": "Un problème est survenue avec lors de la connexion..."
+                    "errorMessage": "Une erreur est survenue lors de la connexion  de l'utilisateur...",
+                    "error": str(e)
                 }
-            ), 404
-    except Exception as e:
-        return jsonify(
-            {
-                "errorMessage": "Une erreur est survenue lors de la connexion  de l'utilisateur...",
-                "error": str(e)
-            }
-        ), 500
+            ), 500
 
 
 @user_bp.route("/users/logout", methods=["DELETE"])

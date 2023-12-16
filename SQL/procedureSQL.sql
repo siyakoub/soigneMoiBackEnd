@@ -1,3 +1,4 @@
+use soigneMoiBdd;
 DELIMITER //
 drop procedure if exists createAdminForUserWithNewUser;
 CREATE PROCEDURE createAdminForUserWithNewUser(

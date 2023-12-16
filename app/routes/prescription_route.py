@@ -9,7 +9,7 @@ from app.utils.hashFunction import hash_password
 prescription_bp = Blueprint("prescription", __name__)
 
 
-@prescription_bp.route("/prescriptions", methods=["GET"])
+@prescription_bp.route("/prescriptions/getAll", methods=["GET"])
 def get_all_prescription_route():
     try:
         prescriptions = PrescriptionService.get_all_prescription_service()

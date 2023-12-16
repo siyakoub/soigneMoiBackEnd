@@ -66,7 +66,7 @@ def get_all_sejour_by_user_route(user_id):
         if sejours and user:
             return jsonify(
                 {
-                    "Sejour": [
+                    "Sejours": [
                         sejour.__dict__ for sejour in sejours
                     ],
                     "Utilisateur": user.__dict__

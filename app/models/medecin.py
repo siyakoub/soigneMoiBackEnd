@@ -185,7 +185,7 @@ class Medecin(User):
                 speciality = medecin_data[4]
 
                 # Ensuite, vous devez récupérer les données de l'utilisateur associé à ce médecin
-                user = User.get_by_id(user_id)
+                user = User.getById(user_id)
 
                 # Créez un objet Medecin en utilisant les données récupérées
                 medecin = Medecin(

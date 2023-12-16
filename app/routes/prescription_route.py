@@ -61,7 +61,7 @@ def get_prescription_by_id_route(prescription_id):
         ), 500
 
 
-@prescription_bp.route("/prescription/<int:user_id>/byuser", methods=["GET"])
+@prescription_bp.route("/prescriptions/<int:user_id>/byuser", methods=["GET"])
 def get_all_prescription_by_user_route(user_id):
     try:
         prescriptions = PrescriptionService.get_all_prescription_by_user_service(user_id)

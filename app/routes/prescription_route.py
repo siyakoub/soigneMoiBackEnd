@@ -90,7 +90,7 @@ def get_all_prescription_by_user_route(user_id):
         )
 
 
-@prescription_bp.route("prescriptions/<int:medecin_id>/bymedecin", methods=["GET"])
+@prescription_bp.route("/prescriptions/<int:medecin_id>/bymedecin", methods=["GET"])
 def get_all_prescription_by_route(medecin_id):
     try:
         prescriptions = PrescriptionService.get_all_prescription_by_medecin_service(medecin_id)
@@ -130,24 +130,18 @@ def create_prescription_route():
         dateFin = data["dateFin"]
         medecin = MedecinService.get_medecin_by_email_service(medecin_email)
         user = UserService.get_user_by_email_service(user_email)
-        if medecin and user:
-            created = PrescriptionService.create_prescription_service(user.user_id, medecin.medecin_id, liste, dateDebut, dateFin)
-            if created:
-                return jsonify(
-                    {
-                        "message": "La prescription à été enregistré avec succès !"
-                    }
-                ), 201
-            else:
-                return jsonify(
-                    {
-                        "errorMessage": "La prescription à été mal enregistré..."
-                    }
-                ), 404
+        created = PrescriptionService.create_prescription_service(user.user_id, medecin.medecin_id, liste, dateDebut,
+                                                                  dateFin)
+        if created:
+            return jsonify(
+                {
+                    "message": "La prescription à été enregistré avec succès !"
+                }
+            ), 201
         else:
             return jsonify(
                 {
-                    "errorMessage": "Problème lors de la création de la prescription..."
+                    "errorMessage": "La prescription à été mal enregistré..."
                 }
             ), 404
     except Exception as e:

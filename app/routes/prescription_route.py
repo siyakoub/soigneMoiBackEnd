@@ -119,7 +119,7 @@ def get_all_prescription_by_route(medecin_id):
         ), 500
 
 
-@prescription_bp.route("/prescriptions", methods=["POST"])
+@prescription_bp.route("/prescriptions/new", methods=["POST"])
 def create_prescription_route():
     try:
         data = request.get_json()

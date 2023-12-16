@@ -13,7 +13,7 @@ app.config['MYSQL_DATABASE_USER'] = Config.MYSQL_USER
 app.config['MYSQL_DATABASE_PASSWORD'] = Config.MYSQL_PASSWORD
 app.config['MYSQL_DATABASE_DB'] = Config.MYSQL_DB
 
-CORS(app, resources={r"/api/*": {"origins": "http://127.0.0.1:5000/"}})
+CORS(app, resources={r"/api/*": {"origins": "https://api.soigne-moi-app.fr/"}})
 
 mysql = MySQL()
 mysql.init_app(app)
